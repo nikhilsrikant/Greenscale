@@ -1,0 +1,18 @@
+global:
+  scrape_interval: 5s
+  evaluation_interval: 5s
+
+scrape_configs:
+  - job_name: greenscale-orchestrator
+    metrics_path: /metrics
+    static_configs:
+      - targets:
+          - orchestrator:8080
+
+  - job_name: greenscale-workers
+    metrics_path: /metrics
+    static_configs:
+      - targets:
+          - aws-worker:9000
+          - azure-worker:9000
+          - gcp-worker:9000

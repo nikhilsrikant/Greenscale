@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: greenscale-config
+  namespace: greenscale
+data:
+  STRICT_SLO: "true"
+  SCHEDULER_ALPHA_LATENCY: "0.45"
+  SCHEDULER_BETA_COST: "0.20"
+  SCHEDULER_GAMMA_CARBON: "0.25"
+  SCHEDULER_DELTA_COLDSTART: "0.10"
+  REGION_ENDPOINTS: |
+    [
+      {"name":"aws-us-east-1","provider":"aws","url":"http://aws-worker.greenscale.svc.cluster.local:9000","zone":"US-MIDA-PJM","base_latency_ms":95,"carbon_gco2_kwh":410,"cost_per_million_requests":0.22,"cold_start_ms":180,"capacity_weight":1.0},
+      {"name":"azure-westus","provider":"azure","url":"http://azure-worker.greenscale.svc.cluster.local:9000","zone":"US-CAL-CISO","base_latency_ms":125,"carbon_gco2_kwh":260,"cost_per_million_requests":0.25,"cold_start_ms":150,"capacity_weight":1.0},
+      {"name":"gcp-us-central1","provider":"gcp","url":"http://gcp-worker.greenscale.svc.cluster.local:9000","zone":"US-MIDW-MISO","base_latency_ms":80,"carbon_gco2_kwh":520,"cost_per_million_requests":0.20,"cold_start_ms":120,"capacity_weight":1.0}
+    ]

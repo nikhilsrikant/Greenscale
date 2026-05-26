@@ -1,0 +1,59 @@
+[
+  {
+    "name": "latency_critical_text",
+    "description": "Short text-classification requests with a user-facing latency SLO.",
+    "workload": "text-classify",
+    "priority": "latency-critical",
+    "slo_ms": 450,
+    "estimated_energy_kwh": 0.00008,
+    "payload_template": {
+      "text": "cloud computing serverless scheduling experiment run {i}"
+    }
+  },
+  {
+    "name": "delay_tolerant_batch_text",
+    "description": "Delay-tolerant batch text workload where greener routing should be preferred when SLO permits.",
+    "workload": "text-classify",
+    "priority": "delay-tolerant",
+    "slo_ms": 1200,
+    "estimated_energy_kwh": 0.00008,
+    "deadline_seconds": 3600,
+    "payload_template": {
+      "text": "batch analytics carbon aware workload run {i}"
+    }
+  },
+  {
+    "name": "strict_ml_inference",
+    "description": "Latency-sensitive ML inference with a strict SLO.",
+    "workload": "ml-inference",
+    "priority": "latency-critical",
+    "slo_ms": 180,
+    "estimated_energy_kwh": 0.00012,
+    "payload_template": {
+      "samples": "expr:128 + (i % 6) * 64"
+    }
+  },
+  {
+    "name": "balanced_image_processing",
+    "description": "Balanced image-processing jobs with moderate latency and carbon constraints.",
+    "workload": "image-compress",
+    "priority": "balanced",
+    "slo_ms": 650,
+    "estimated_energy_kwh": 0.00015,
+    "payload_template": {
+      "image_id": "synthetic-image-{i}"
+    }
+  },
+  {
+    "name": "stream_aggregate_delay_tolerant",
+    "description": "Delay-tolerant stream aggregation workload with numeric event batches.",
+    "workload": "stream-aggregate",
+    "priority": "delay-tolerant",
+    "slo_ms": 1000,
+    "estimated_energy_kwh": 0.00006,
+    "deadline_seconds": 1800,
+    "payload_template": {
+      "values": "expr:[(i + j) % 17 for j in range(20)]"
+    }
+  }
+]

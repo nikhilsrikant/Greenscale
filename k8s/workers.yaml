@@ -1,0 +1,179 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aws-worker
+  namespace: greenscale
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: aws-worker
+  template:
+    metadata:
+      labels:
+        app: aws-worker
+    spec:
+      containers:
+        - name: worker
+          image: greenscale-worker:dev
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 9000
+              name: http
+          env:
+            - name: REGION_NAME
+              value: aws-us-east-1
+            - name: PROVIDER
+              value: aws
+            - name: SIMULATED_LATENCY_MS
+              value: "95"
+            - name: COLD_START_PROBABILITY
+              value: "0.18"
+            - name: COLD_START_MS
+              value: "180"
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 9000
+            initialDelaySeconds: 3
+            periodSeconds: 5
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: aws-worker
+  namespace: greenscale
+spec:
+  selector:
+    app: aws-worker
+  ports:
+    - port: 9000
+      targetPort: 9000
+      name: http
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: azure-worker
+  namespace: greenscale
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: azure-worker
+  template:
+    metadata:
+      labels:
+        app: azure-worker
+    spec:
+      containers:
+        - name: worker
+          image: greenscale-worker:dev
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 9000
+              name: http
+          env:
+            - name: REGION_NAME
+              value: azure-westus
+            - name: PROVIDER
+              value: azure
+            - name: SIMULATED_LATENCY_MS
+              value: "125"
+            - name: COLD_START_PROBABILITY
+              value: "0.10"
+            - name: COLD_START_MS
+              value: "150"
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 9000
+            initialDelaySeconds: 3
+            periodSeconds: 5
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: azure-worker
+  namespace: greenscale
+spec:
+  selector:
+    app: azure-worker
+  ports:
+    - port: 9000
+      targetPort: 9000
+      name: http
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gcp-worker
+  namespace: greenscale
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: gcp-worker
+  template:
+    metadata:
+      labels:
+        app: gcp-worker
+    spec:
+      containers:
+        - name: worker
+          image: greenscale-worker:dev
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 9000
+              name: http
+          env:
+            - name: REGION_NAME
+              value: gcp-us-central1
+            - name: PROVIDER
+              value: gcp
+            - name: SIMULATED_LATENCY_MS
+              value: "80"
+            - name: COLD_START_PROBABILITY
+              value: "0.12"
+            - name: COLD_START_MS
+              value: "120"
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 9000
+            initialDelaySeconds: 3
+            periodSeconds: 5
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gcp-worker
+  namespace: greenscale
+spec:
+  selector:
+    app: gcp-worker
+  ports:
+    - port: 9000
+      targetPort: 9000
+      name: http

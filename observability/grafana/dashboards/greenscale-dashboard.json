@@ -1,0 +1,166 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {"type": "grafana", "uid": "-- Grafana --"},
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {"limit": 100, "matchAny": false, "tags": [], "type": "dashboard"},
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": {"type": "prometheus", "uid": "Prometheus"},
+      "description": "Total request rate observed by the orchestrator, grouped by workload.",
+      "fieldConfig": {"defaults": {"unit": "reqps"}, "overrides": []},
+      "gridPos": {"h": 8, "w": 8, "x": 0, "y": 0},
+      "id": 1,
+      "options": {"legend": {"displayMode": "table", "placement": "bottom"}, "tooltip": {"mode": "multi", "sort": "none"}},
+      "targets": [
+        {"datasource": {"type": "prometheus", "uid": "Prometheus"}, "expr": "sum(rate(greenscale_requests_total[1m])) by (workload)", "legendFormat": "{{workload}}", "refId": "A"}
+      ],
+      "title": "Request Rate by Workload",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {"type": "prometheus", "uid": "Prometheus"},
+      "description": "How often the scheduler selected each simulated cloud region.",
+      "fieldConfig": {"defaults": {"unit": "short"}, "overrides": []},
+      "gridPos": {"h": 8, "w": 8, "x": 8, "y": 0},
+      "id": 2,
+      "options": {"legend": {"displayMode": "table", "placement": "right"}, "tooltip": {"mode": "single", "sort": "none"}},
+      "targets": [
+        {"datasource": {"type": "prometheus", "uid": "Prometheus"}, "expr": "sum(greenscale_scheduler_decisions_total) by (region)", "legendFormat": "{{region}}", "refId": "A"}
+      ],
+      "title": "Scheduler Decisions by Region",
+      "type": "piechart"
+    },
+    {
+      "datasource": {"type": "prometheus", "uid": "Prometheus"},
+      "description": "Prometheus target status for orchestrator and worker services. 1 means the target is healthy.",
+      "fieldConfig": {"defaults": {"mappings": [{"options": {"0": {"text": "DOWN"}, "1": {"text": "UP"}}, "type": "value"}], "thresholds": {"mode": "absolute", "steps": [{"color": "red", "value": null}, {"color": "green", "value": 1}]}, "unit": "short"}, "overrides": []},
+      "gridPos": {"h": 8, "w": 8, "x": 16, "y": 0},
+      "id": 3,
+      "options": {"colorMode": "value", "graphMode": "area", "justifyMode": "auto", "orientation": "auto", "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}, "showPercentChange": false, "textMode": "auto", "wideLayout": true},
+      "pluginVersion": "11.4.0",
+      "targets": [
+        {"datasource": {"type": "prometheus", "uid": "Prometheus"}, "expr": "up", "legendFormat": "{{job}} {{instance}}", "refId": "A"}
+      ],
+      "title": "Service Health",
+      "type": "stat"
+    },
+    {
+      "datasource": {"type": "prometheus", "uid": "Prometheus"},
+      "description": "p95 end-to-end latency seen by the orchestrator.",
+      "fieldConfig": {"defaults": {"unit": "s"}, "overrides": []},
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8},
+      "id": 4,
+      "options": {"legend": {"displayMode": "table", "placement": "bottom"}, "tooltip": {"mode": "multi", "sort": "none"}},
+      "targets": [
+        {"datasource": {"type": "prometheus", "uid": "Prometheus"}, "expr": "histogram_quantile(0.95, sum(rate(greenscale_orchestrator_latency_seconds_bucket[5m])) by (le, workload, region))", "legendFormat": "{{workload}} / {{region}}", "refId": "A"}
+      ],
+      "title": "p95 Orchestrator Latency",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {"type": "prometheus", "uid": "Prometheus"},
+      "description": "p95 worker execution latency by region.",
+      "fieldConfig": {"defaults": {"unit": "s"}, "overrides": []},
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8},
+      "id": 5,
+      "options": {"legend": {"displayMode": "table", "placement": "bottom"}, "tooltip": {"mode": "multi", "sort": "none"}},
+      "targets": [
+        {"datasource": {"type": "prometheus", "uid": "Prometheus"}, "expr": "histogram_quantile(0.95, sum(rate(greenscale_worker_run_latency_seconds_bucket[5m])) by (le, workload, region))", "legendFormat": "{{workload}} / {{region}}", "refId": "A"}
+      ],
+      "title": "p95 Worker Latency",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {"type": "prometheus", "uid": "Prometheus"},
+      "description": "Total simulated cold starts emitted by the worker layer.",
+      "fieldConfig": {"defaults": {"unit": "short"}, "overrides": []},
+      "gridPos": {"h": 8, "w": 8, "x": 0, "y": 16},
+      "id": 6,
+      "options": {"legend": {"displayMode": "table", "placement": "bottom"}, "tooltip": {"mode": "multi", "sort": "none"}},
+      "targets": [
+        {"datasource": {"type": "prometheus", "uid": "Prometheus"}, "expr": "sum(greenscale_worker_cold_starts_total) by (region)", "legendFormat": "{{region}}", "refId": "A"}
+      ],
+      "title": "Cold Starts by Region",
+      "type": "barchart"
+    },
+    {
+      "datasource": {"type": "prometheus", "uid": "Prometheus"},
+      "description": "Estimated carbon attributed by the scheduler to selected placements.",
+      "fieldConfig": {"defaults": {"unit": "short"}, "overrides": []},
+      "gridPos": {"h": 8, "w": 8, "x": 8, "y": 16},
+      "id": 7,
+      "options": {"legend": {"displayMode": "table", "placement": "bottom"}, "tooltip": {"mode": "multi", "sort": "none"}},
+      "targets": [
+        {"datasource": {"type": "prometheus", "uid": "Prometheus"}, "expr": "sum(greenscale_estimated_carbon_gco2_sum) by (region)", "legendFormat": "{{region}}", "refId": "A"}
+      ],
+      "title": "Cumulative Estimated Carbon, gCO2",
+      "type": "barchart"
+    },
+    {
+      "datasource": {"type": "prometheus", "uid": "Prometheus"},
+      "description": "Estimated cloud request cost attributed by the scheduler to selected placements.",
+      "fieldConfig": {"defaults": {"unit": "currencyUSD"}, "overrides": []},
+      "gridPos": {"h": 8, "w": 8, "x": 16, "y": 16},
+      "id": 8,
+      "options": {"legend": {"displayMode": "table", "placement": "bottom"}, "tooltip": {"mode": "multi", "sort": "none"}},
+      "targets": [
+        {"datasource": {"type": "prometheus", "uid": "Prometheus"}, "expr": "sum(greenscale_estimated_cost_usd_sum) by (region)", "legendFormat": "{{region}}", "refId": "A"}
+      ],
+      "title": "Cumulative Estimated Cost, USD",
+      "type": "barchart"
+    },
+    {
+      "datasource": {"type": "prometheus", "uid": "Prometheus"},
+      "description": "Predicted latency divided by requested SLO. Values above 1 suggest predicted SLO violation.",
+      "fieldConfig": {"defaults": {"unit": "percentunit"}, "overrides": []},
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 24},
+      "id": 9,
+      "options": {"legend": {"displayMode": "table", "placement": "bottom"}, "tooltip": {"mode": "multi", "sort": "none"}},
+      "targets": [
+        {"datasource": {"type": "prometheus", "uid": "Prometheus"}, "expr": "histogram_quantile(0.95, sum(rate(greenscale_slo_budget_utilization_ratio_bucket[5m])) by (le, workload, region))", "legendFormat": "{{workload}} / {{region}}", "refId": "A"}
+      ],
+      "title": "p95 SLO Budget Utilization",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {"type": "prometheus", "uid": "Prometheus"},
+      "description": "Scheduler score distributions. Lower is better.",
+      "fieldConfig": {"defaults": {"unit": "short"}, "overrides": []},
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 24},
+      "id": 10,
+      "options": {"legend": {"displayMode": "table", "placement": "bottom"}, "tooltip": {"mode": "multi", "sort": "none"}},
+      "targets": [
+        {"datasource": {"type": "prometheus", "uid": "Prometheus"}, "expr": "histogram_quantile(0.50, sum(rate(greenscale_scheduler_score_bucket[5m])) by (le, region))", "legendFormat": "median {{region}}", "refId": "A"},
+        {"datasource": {"type": "prometheus", "uid": "Prometheus"}, "expr": "histogram_quantile(0.95, sum(rate(greenscale_scheduler_score_bucket[5m])) by (le, region))", "legendFormat": "p95 {{region}}", "refId": "B"}
+      ],
+      "title": "Scheduler Score",
+      "type": "timeseries"
+    }
+  ],
+  "refresh": "5s",
+  "schemaVersion": 40,
+  "tags": ["greenscale", "cloud", "carbon-aware", "slo"],
+  "templating": {"list": []},
+  "time": {"from": "now-15m", "to": "now"},
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "GreenScale Cloud Observability",
+  "uid": "greenscale-cloud-observability",
+  "version": 1,
+  "weekStart": ""
+}
